@@ -290,17 +290,16 @@ class GalleryGridDownloadPage extends StatelessWidget with Scroll2TopPageMixin, 
     );
   }
 
-  GestureDetector _buildActionButton(GalleryDownloadedData gallery, GalleryDownloadProgress downloadProgress, GalleryDownloadSpeedComputer speedComputer) {
-    return GestureDetector(
-      onTap: () {
-        downloadProgress.downloadStatus == DownloadStatus.paused
-            ? logic.downloadService.resumeDownloadGallery(gallery)
-            : logic.downloadService.pauseDownloadGallery(gallery);
-      },
-      child: Center(
+  Center _buildActionButton(GalleryDownloadedData gallery, GalleryDownloadProgress downloadProgress, GalleryDownloadSpeedComputer speedComputer) {
+    return Center(
+      child: GestureDetector(
+        onTap: () {
+          downloadProgress.downloadStatus == DownloadStatus.paused ? logic.downloadService.resumeDownloadGallery(gallery) : logic.downloadService.pauseDownloadGallery(gallery);
+        },
+        behavior: HitTestBehavior.opaque, // enable touching padding
         child: GetBuilder<GalleryDownloadService>(
           id: '${logic.downloadService.galleryDownloadProgressId}::${gallery.gid}',
-          builder: (_) => Container(child: downloadProgress.downloadStatus == DownloadStatus.downloading
+          builder: (_) => downloadProgress.downloadStatus == DownloadStatus.downloading
               ? GetBuilder<GalleryDownloadService>(
                   id: '${logic.downloadService.galleryDownloadSpeedComputerId}::${gallery.gid}',
                   builder: (_) => Text(
@@ -315,8 +314,7 @@ class GalleryGridDownloadPage extends StatelessWidget with Scroll2TopPageMixin, 
                   downloadProgress.downloadStatus == DownloadStatus.paused ? Icons.play_arrow : Icons.done,
                   color: UIConfig.downloadPageGridTextColor,
                 ),
-          ).paddingAll(30),
-        ),
+        ).paddingAll(30),
       ),
     );
   }
